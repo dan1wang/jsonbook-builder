@@ -34,6 +34,7 @@ xParser.on('opentag', (node) => {
       throw new Error('XML file is not a Wiktionary file!');
     } else {
       console.log('This might take a while, so please take a break...');
+      console.log(new Date());
     }
   }
   xPath.push(node.name);
@@ -48,16 +49,12 @@ xParser.on('closetag', (node) => {
       }
     }
     article = {};
-    articleCount++;
-    if (articleCount % 1000 === 0) {
-      console.log(`checking in: ${articleCount} articles parsed...`);
-    }
   }
   xPath.pop(node.name);
   xPathString = xPath.join('/');
 });
 
-xParser.onend = () => console.log('Coffee break is over');
+xParser.onend = () => console.log('Coffee break is over(' + (new Date()) + ')');
 
 xParser.onerror = (e) => console.log('Error: ' + e);
 

@@ -7,14 +7,22 @@ const fsUtils = require('./file');
 
 const tmpDir = fsUtils.getTempDir();
 
+let articleCount = 0;
+
 exports.processor = (article) => {
+  articleCount++;
+  const collection = (Math.floor(articleCount / 10000) + 1) * 10000;
+  if (articleCount % 100000 === 0) {
+    console.log(`checking in: ${articleCount} articles processed...`);
+  }
+
   const title = safeFileName(article.title);
   const destDir =
       (article.text.indexOf('==English==') !== -1)
       ? 'en'
-      : 'en/others';
+      : 'xx';
   // json.save(`${destDir}/(${article.id}) ${title}.json`, article);
-  const fPath = `${tmpDir}/${destDir}/${article.id}.json`
+  const fPath = `${tmpDir}/${collection}/${destDir}/${article.id}.json`
   fsUtils.mkDir(fPath, () => json.save(fPath, article));
 };
 
