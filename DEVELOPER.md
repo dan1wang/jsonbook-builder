@@ -9,10 +9,6 @@
 
 [Wiktionary](https://en.wiktionary.org/) dump in accessible `JSON` format.
 
-## Install
-
-One of the dependencies
-
 ## Getting the source
 
 1. Download the latest dump of the English Wiktionary:
