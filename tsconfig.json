@@ -1,0 +1,25 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "target": "es6",
+    "rootDir": "src",
+    "outDir": "dist",
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+  "typedocOptions": {
+    "excludeExternals": true,
+    "includes": "src",
+    "includeDeclarations": true,
+    "mode": "file",
+    "name": "Rhymes Documentation",
+    "out": "docs"
+  }
+}

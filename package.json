@@ -1,0 +1,58 @@
+{
+  "name": "jsonbook",
+  "version": "0.1.0",
+  "description": "Witionary dump in accessible JSON format.",
+  "main": "dist/index.js",
+  "files": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "dist/*.d.ts",
+    "dist/*.js"
+  ],
+  "scripts": {
+    "build": "node src/",
+    "build-docs": "typedoc",
+    "check": "npm run check-ts && npm run check-js",
+    "check-js": "prettier --list-different src/*.js test/*.js",
+    "check-ts": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "cov": "nyc report --reporter=json && codecov -f coverage/*.json",
+    "fix": "npm run fix-ts && npm run fix-js",
+    "fix-js": "prettier --write src/*.js test/*.js",
+    "fix-ts": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check && npm run cov",
+    "release": "standard-version",
+    "test": "nyc mocha"
+  },
+  "repository": "https://github.com/dan1wang/jsonbook",
+  "bugs": "https://github.com/dan1wang/jsonbook/issues",
+  "keywords": [
+    "english",
+    "json",
+    "language",
+    "wiktionary",
+    "words"
+  ],
+  "author": "Daniel Wang <daniel.liberated@gmail.com> (https://github.com/dan1wang/)",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "codecov": "^3.3.0",
+    "eslint": "^5.16.0",
+    "eslint-config-google": "^0.12.0",
+    "gts": "^0.9.0",
+    "mocha": "^6.1.2",
+    "nyc": "^13.3.0",
+    "prettier": "^1.15.3",
+    "sax": "^1.2.4",
+    "standard-version": "^5.0.2",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.4.3",
+    "xml-stream-lite": "^0.5.1"
+  }
+}
