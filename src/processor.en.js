@@ -3,14 +3,19 @@
 
 const json = require('./json');
 const safeFileName = require('./file').safeFileName;
+const fsUtils = require('./file');
+
+const tmpDir = fsUtils.getTempDir();
 
 exports.processor = (article) => {
   const title = safeFileName(article.title);
   const destDir =
       (article.text.indexOf('==English==') !== -1)
-      ? 'dist/en'
-      : 'dist/en/others';
-  json.save(`${destDir}/(${article.id}) ${title}.json`, article);
+      ? 'en'
+      : 'en/others';
+  // json.save(`${destDir}/(${article.id}) ${title}.json`, article);
+  const fPath = `${tmpDir}/${destDir}/${article.id}.json`
+  fsUtils.mkDir(fPath, () => json.save(fPath, article));
 };
 
 /*
