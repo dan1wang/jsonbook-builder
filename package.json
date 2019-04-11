@@ -28,6 +28,7 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.12.0",
+    "git-branch": "^2.0.1",
     "sax": "^1.2.4",
     "standard-version": "^5.0.2"
   }

@@ -2,6 +2,9 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
+const sys = require('os');
+const branch = require('git-branch');
 
 const DATA_DIR = 'data/';
 
@@ -53,5 +56,24 @@ function safeFileName(fName) {
   return sanitized;
 }
 
+/**
+ *  Make sure a directory exists
+ */
+function mkDir(fPath, callback) {
+  fs.promises
+    .mkdir(path.dirname(fPath), {recursive: true})
+    .then( callback );
+}
+
+/**
+ * Get temporary directory
+ * @return {string} Directory path
+ */
+function getTempDir() {
+  return sys.tmpdir() + '/jsonbook-' + branch.sync();
+}
+
 exports.safeFileName = safeFileName;
 exports.getFileStream = getFileStream;
+exports.mkDir = mkDir;
+exports.getTempDir = getTempDir;
