@@ -1,6 +1,6 @@
 {
   "name": "jsonbook",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Witionary dump in accessible JSON format.",
   "main": "dist/index.js",
   "files": [
@@ -11,7 +11,8 @@
     "dist/*.js"
   ],
   "scripts": {
-    "build": "node src/"
+    "build": "node src/",
+    "release": "standard-version"
   },
   "repository": "https://github.com/dan1wang/jsonbook",
   "bugs": "https://github.com/dan1wang/jsonbook/issues",
