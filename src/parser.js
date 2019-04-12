@@ -3,6 +3,8 @@
 
 const sax = require('sax');
 
+const struct = require('./wikiText/struct').struct;
+
 const xParser = sax.createStream(
     true,
     {normalize: false, lowercase: false}
@@ -21,7 +23,7 @@ xParser.on('text', (t) => {
       article['timestamp'] = (new Date(t)).valueOf();
       break;
     case 'mediawiki/page/revision/text':
-      article['text'] = t;
+      article['text'] = struct(t);
       break;
     default:
   }
