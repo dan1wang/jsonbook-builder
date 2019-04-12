@@ -57,12 +57,14 @@ function safeFileName(fName) {
 }
 
 /**
- *  Make sure a directory exists
+ * Make sure a directory exists
+ * @param {string} fPath target directory
+ * @param {function} callback callback function
  */
 function mkDir(fPath, callback) {
   fs.promises
-    .mkdir(path.dirname(fPath), {recursive: true})
-    .then( callback );
+      .mkdir(path.dirname(fPath), {recursive: true})
+      .then( callback );
 }
 
 /**

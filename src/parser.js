@@ -8,7 +8,6 @@ const xParser = sax.createStream(
     {normalize: false, lowercase: false}
 );
 
-let articleCount = 0;
 let article = {};
 const xPath = [];
 let xPathString = '';
