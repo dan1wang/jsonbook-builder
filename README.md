@@ -12,7 +12,7 @@ the _parsing_ part can be daunting and quickly turn any interested developer
 off. This is because:
 
 * The dump file is **very big** (5.5Gb uncompressed)
-* The dump file contains many **other things** like discussion pages.
+* The dump file contains many [other things](doc/dump_stats_en.md).
 * Wiktionary is a _dictionary in English_, not a _English dictionary_, so
   its entries includes a lot of non-English words.
 * The entries aren't in alphabetical order.  
