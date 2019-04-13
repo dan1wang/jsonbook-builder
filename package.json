@@ -1,0 +1,36 @@
+{
+  "name": "jsonbook",
+  "version": "0.2.0",
+  "description": "Witionary dump in accessible JSON format.",
+  "main": "dist/index.js",
+  "files": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "dist/*.d.ts",
+    "dist/*.js"
+  ],
+  "scripts": {
+    "build": "node src/",
+    "release": "standard-version"
+  },
+  "repository": "https://github.com/dan1wang/jsonbook",
+  "bugs": "https://github.com/dan1wang/jsonbook/issues",
+  "keywords": [
+    "english",
+    "json",
+    "language",
+    "wiktionary",
+    "words"
+  ],
+  "author": "Daniel Wang <daniel.liberated@gmail.com> (https://github.com/dan1wang/)",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-google": "^0.12.0",
+    "git-branch": "^2.0.1",
+    "sax": "^1.2.4",
+    "standard-version": "^5.0.2"
+  }
+}
