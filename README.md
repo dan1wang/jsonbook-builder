@@ -19,8 +19,8 @@ off. This is because:
   its entries includes a lot of non-English words.
 * The entries aren't in alphabetical order.  
 
-In other words, to get to the content you want, you have first filter through a
-lot of things you aren't remotely interested in. Or, you can spam the system
+In other words, to get to the content you want, you have first filter through
+millions of pages you aren't remotely interested in. Or, you can spam the system
 with lots of API calls.
 
 ## Solution
