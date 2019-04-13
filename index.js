@@ -2,7 +2,6 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
 const sax = require('sax');
 
 const DATA_DIR = 'data/';
@@ -58,36 +57,36 @@ xParser.on('closetag', (node) => {
     if (article.ns !== 0) {
       let logFile;
       switch (article.ns) {
-        case   4: logFile = '004 Wiktionary.log'; break;
-        case   6: logFile = '006 file.log'; break;
-        case   8: logFile = '008 MediaWiki.log'
-        case  10: logFile = '010 template.log'; break;
-        case  12: logFile = '012 help.log'; break;
-        case  14: logFile = '014 category.log'; break;
-        case  90: logFile = '090 thread.log'; break;
-        case  92: logFile = '092 summary.log'; break;
-        case 100: logFile = '100 appendix.log'; break;
-        case 102: logFile = '102 condordance.log'; break;
-        case 104: logFile = '104 index.log'; break;
-        case 106: logFile = '106 rhymes.log'; break;
-        case 108: logFile = '108 transwiki.log'; break;
-        case 110: logFile = '110 thesaurus.log'; break;
-        case 114: logFile = '114 citation.log'; break;
-        case 116: logFile = '116 sign gloss.log'; break;
-        case 118: logFile = '118 reconstruction.log'; break;
-        case 828: logFile = '828 module.log'; break;
-        default: logFile = article.ns + '.log';
+        case   4: logFile = '004 Wiktionary.tsv'; break;
+        case   6: logFile = '006 file.tsv'; break;
+        case   8: logFile = '008 MediaWiki.tsv'
+        case  10: logFile = '010 template.tsv'; break;
+        case  12: logFile = '012 help.tsv'; break;
+        case  14: logFile = '014 category.tsv'; break;
+        case  90: logFile = '090 thread.tsv'; break;
+        case  92: logFile = '092 summary.tsv'; break;
+        case 100: logFile = '100 appendix.tsv'; break;
+        case 102: logFile = '102 condordance.tsv'; break;
+        case 104: logFile = '104 index.tsv'; break;
+        case 106: logFile = '106 rhymes.tsv'; break;
+        case 108: logFile = '108 transwiki.tsv'; break;
+        case 110: logFile = '110 thesaurus.tsv'; break;
+        case 114: logFile = '114 citation.tsv'; break;
+        case 116: logFile = '116 sign gloss.tsv'; break;
+        case 118: logFile = '118 reconstruction.tsv'; break;
+        case 828: logFile = '828 module.tsv'; break;
+        default: logFile = article.ns + '.tsv';
       }
       fs.appendFileSync(logFile, article.title + '\t' + article.id + '\n');
     } else {
       if (article.text.indexOf('<!--') !== -1)
-        fs.appendFileSync('articles with comment tag.log', article.title + '\t' + article.id + '\n');
+        fs.appendFileSync('articles with comment tag.tsv', article.title + '\t' + article.id + '\n');
 
       if (article.text.indexOf('<pre>') !== -1)
-        fs.appendFileSync('articles with pre tag.log', article.title + '\t' + article.id + '\n');
+        fs.appendFileSync('articles with pre tag.tsv', article.title + '\t' + article.id + '\n');
 
       if (article.text.indexOf('<code>') !== -1)
-        fs.appendFileSync('articles with code tag.log', article.title + '\t' + article.id + '\n');
+        fs.appendFileSync('articles with code tag.tsv', article.title + '\t' + article.id + '\n');
     }
 
     article = {};
