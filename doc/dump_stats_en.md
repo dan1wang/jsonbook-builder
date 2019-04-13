@@ -3,14 +3,14 @@
 The English Wiktionary dump contains lots of things other than dictionary
 entries:
 
-* ** 6 million dictionary entries **
+* **6 million dictionary entries**
 * 282,000 category pages
   (e.g. [French nouns](https://en.wiktionary.org/wiki/Category:French_nouns))
 * 30,000 template pages
   (e.g. [MediaWiki:Sitesubtitle](https://en.wiktionary.org/wiki/MediaWiki:Sitesubtitle))
 * 10,000 Wiktionary pages
   (e.g. [Welcome, newcomers](https://en.wiktionary.org/wiki/Wiktionary:Welcome,_newcomers))
-* 51,000 moduel pages
+* 51,000 module pages
 * 26,000 citations pages
 * 18,000 appendix pages
 * 18,000 reconstruction pages

@@ -2,7 +2,9 @@
 
 [Wiktionary](https://en.wiktionary.org/) dump in accessible `JSON` format.
 
-[enwiktionary-link]: https://dumps.wikimedia.org/enwiktionary/latest/enwiktionary-latest-pages-articles.xml.bz2
+## TL;DR
+
+Just get the files: [Wiktionary dump in `JSON` format][filelink]
 
 ## Why
 
@@ -32,3 +34,9 @@ awesome use of the Wiktionary dump. It does the following:
 4. Save all the content to individual `JSON` files.
 
 See a [sample output](doc/sample-output.tar.bz2) of the entry for "gratis".
+
+Currently it takes about 58 minutes to parse the entire English Wiktionary
+dump on a 2013 MacBook Pro.
+
+[filelink]: https://drive.google.com/open?id=1X83TEseBImv8YXk7GoQOuGQt3qDMbiaI
+[enwiktionary-link]: https://dumps.wikimedia.org/enwiktionary/latest/enwiktionary-latest-pages-articles.xml.bz2
