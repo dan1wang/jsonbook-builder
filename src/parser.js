@@ -55,7 +55,7 @@ xParser.on('closetag', (node) => {
   xPathString = xPath.join('/');
 });
 
-xParser.onend = () => console.log('Coffee break is over(' + (new Date()) + ')');
+xParser.on('end', () => console.log(`Coffee break is over (${new Date()})`));
 
 xParser.onerror = (e) => console.log('Error: ' + e);
 
