@@ -19,7 +19,7 @@ function getFileStream() {
       let lastProgress = -1;
       reader.on('data', (data) => {
         fReadSize += data.length;
-        const progress = Math.round(fReadSize / fTotalSize, 2);
+        const progress = Math.round(1000 * fReadSize / fTotalSize) / 1000;
         if (progress > lastProgress) {
           lastProgress = progress;
           drawProgressBar(progress, `Reading '${fName}'...`);
@@ -30,7 +30,7 @@ function getFileStream() {
         const elapsed = (endTime - startTime) / (60 * 1000);
         const h = Math.floor(elapsed / 60);
         const m = Math.floor(elapsed) % 60;
-        console.log(`Finished in ${h} h ${m} min.`);
+        console.log(`\nFinished in ${h} h ${m} min.`);
       });
       return reader;
     }
@@ -40,9 +40,9 @@ function getFileStream() {
 
 function drawProgressBar(progress, message) {
   const bars = Math.round(progress * 20,0);
-  const filled = chalk.bgWhite(''.repeat(bars));
+  const filled = chalk.bgWhite(' '.repeat(bars));
   const empty = '.'.repeat(20 - bars);
-  const pct = Math.floor(progress * 100) + '%';
+  const pct = (Math.floor(progress * 1000)/10) + '%';
   process.stdout.clearLine();
   process.stdout.cursorTo(0);
   process.stdout.write(`[${filled}${empty}]: ${message} (${pct})`);
