@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const sax = require('sax');
+const chalk = require("chalk");
 
 const DATA_DIR = 'data/';
 
@@ -11,10 +12,40 @@ function getFileStream() {
   for (let i = 0; i < files.length; i++) {
     const fName = files[i];
     if (fName.slice(fName.length-4).toLowerCase() === '.xml') {
-      return fs.createReadStream(DATA_DIR + fName);
+      const reader = fs.createReadStream(DATA_DIR + fName);
+      const startTime = (new Date()).valueOf();
+      let fTotalSize = fs.statSync(DATA_DIR + '/' + fName).size;
+      let fReadSize = 0;
+      let lastProgress = -1;
+      reader.on('data', (data) => {
+        fReadSize += data.length;
+        const progress = Math.round(fReadSize / fTotalSize, 2);
+        if (progress > lastProgress) {
+          lastProgress = progress;
+          drawProgressBar(progress, `Reading '${fName}'...`);
+        }
+      });
+      reader.on('end', () => {
+        const endTime = (new Date()).valueOf();
+        const elapsed = (endTime - startTime) / (60 * 1000);
+        const h = Math.floor(elapsed / 60);
+        const m = Math.floor(elapsed) % 60;
+        console.log(`Finished in ${h} h ${m} min.`);
+      });
+      return reader;
     }
   }
   throw new Error('Cannot find any .xml file in "data/" directory.');
+}
+
+function drawProgressBar(progress, message) {
+  const bars = Math.round(progress * 20,0);
+  const filled = chalk.bgWhite(''.repeat(bars));
+  const empty = '.'.repeat(20 - bars);
+  const pct = Math.floor(progress * 100) + '%';
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+  process.stdout.write(`[${filled}${empty}]: ${message} (${pct})`);
 }
 
 const xParser = sax.createStream(
@@ -43,8 +74,6 @@ xParser.on('opentag', (node) => {
   if (xPath.length === 0) {
     if (node.name !== 'mediawiki') {
       throw new Error('XML file is not a Wiktionary file!');
-    } else {
-      console.log('Starting at ' + (new Date()));
     }
   }
   xPath.push(node.name);
@@ -87,6 +116,15 @@ xParser.on('closetag', (node) => {
 
       if (article.text.indexOf('<code>') !== -1)
         fs.appendFileSync('articles with code tag.tsv', article.title + '\t' + article.id + '\n');
+      if (
+        (article.text.indexOf('==English==',0) !== -1) &&
+        (article.text.indexOf('{{en-',0) === -1) &&
+        (article.text.indexOf('[[Category:English',0) === -1) &&
+        (article.text.indexOf('{{catlangname|en',0) === -1) &&
+        (article.text.indexOf('{{cln|en',0) === -1) &&
+        (article.text.indexOf('{{head|en',0) === -1)
+      )
+        fs.appendFileSync('English words properly categorized.tsv', article.title + '\t' + article.id + '\n');
     }
 
     article = {};
@@ -94,8 +132,6 @@ xParser.on('closetag', (node) => {
   xPath.pop(node.name);
   xPathString = xPath.join('/');
 });
-
-xParser.on('end', () => console.log('Stopping at ' + (new Date())));
 
 
 // -------------------------------------------

@@ -1,4 +1,5 @@
 node_modules/
 *.xml
+*.tsv
 *.log
 .DS_Store
