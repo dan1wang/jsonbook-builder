@@ -82,56 +82,94 @@ xParser.on('opentag', (node) => {
 
 xParser.on('closetag', (node) => {
   if (xPathString === 'mediawiki/page') {
-
-    if (article.ns !== 0) {
-      let logFile;
-      switch (article.ns) {
-        case   4: logFile = '004 Wiktionary.tsv'; break;
-        case   6: logFile = '006 file.tsv'; break;
-        case   8: logFile = '008 MediaWiki.tsv'
-        case  10: logFile = '010 template.tsv'; break;
-        case  12: logFile = '012 help.tsv'; break;
-        case  14: logFile = '014 category.tsv'; break;
-        case  90: logFile = '090 thread.tsv'; break;
-        case  92: logFile = '092 summary.tsv'; break;
-        case 100: logFile = '100 appendix.tsv'; break;
-        case 102: logFile = '102 condordance.tsv'; break;
-        case 104: logFile = '104 index.tsv'; break;
-        case 106: logFile = '106 rhymes.tsv'; break;
-        case 108: logFile = '108 transwiki.tsv'; break;
-        case 110: logFile = '110 thesaurus.tsv'; break;
-        case 114: logFile = '114 citation.tsv'; break;
-        case 116: logFile = '116 sign gloss.tsv'; break;
-        case 118: logFile = '118 reconstruction.tsv'; break;
-        case 828: logFile = '828 module.tsv'; break;
-        default: logFile = article.ns + '.tsv';
-      }
-      fs.appendFileSync(logFile, article.title + '\t' + article.id + '\n');
-    } else {
-      if (article.text.indexOf('<!--') !== -1)
-        fs.appendFileSync('articles with comment tag.tsv', article.title + '\t' + article.id + '\n');
-
-      if (article.text.indexOf('<pre>') !== -1)
-        fs.appendFileSync('articles with pre tag.tsv', article.title + '\t' + article.id + '\n');
-
-      if (article.text.indexOf('<code>') !== -1)
-        fs.appendFileSync('articles with code tag.tsv', article.title + '\t' + article.id + '\n');
-      if (
-        (article.text.indexOf('==English==',0) !== -1) &&
-        (article.text.indexOf('{{en-',0) === -1) &&
-        (article.text.indexOf('[[Category:English',0) === -1) &&
-        (article.text.indexOf('{{catlangname|en',0) === -1) &&
-        (article.text.indexOf('{{cln|en',0) === -1) &&
-        (article.text.indexOf('{{head|en',0) === -1)
-      )
-        fs.appendFileSync('English words properly categorized.tsv', article.title + '\t' + article.id + '\n');
+    logNonDictionaryEntries(article);
+    if (article.ns === 0) {
+      logTag(article);
+      logTemplate(article);
+      logMagic(article);
+      logEnUncategorized(article);
     }
-
     article = {};
   }
   xPath.pop(node.name);
   xPathString = xPath.join('/');
 });
+
+const logIt = fs.appendFileSync;
+
+function hasString(str, subStr) {
+  return (str.indexOf(subStr, 0) !== -1)
+}
+
+function logNonDictionaryEntries(article) {
+  if (article.ns !== 0) {
+    let logFile;
+    switch (article.ns) {
+      case   4: logFile = '004 Wiktionary.tsv'; break;
+      case   6: logFile = '006 file.tsv'; break;
+      case   8: logFile = '008 MediaWiki.tsv'
+      case  10: logFile = '010 template.tsv'; break;
+      case  12: logFile = '012 help.tsv'; break;
+      case  14: logFile = '014 category.tsv'; break;
+      case  90: logFile = '090 thread.tsv'; break;
+      case  92: logFile = '092 summary.tsv'; break;
+      case 100: logFile = '100 appendix.tsv'; break;
+      case 102: logFile = '102 condordance.tsv'; break;
+      case 104: logFile = '104 index.tsv'; break;
+      case 106: logFile = '106 rhymes.tsv'; break;
+      case 108: logFile = '108 transwiki.tsv'; break;
+      case 110: logFile = '110 thesaurus.tsv'; break;
+      case 114: logFile = '114 citation.tsv'; break;
+      case 116: logFile = '116 sign gloss.tsv'; break;
+      case 118: logFile = '118 reconstruction.tsv'; break;
+      case 828: logFile = '828 module.tsv'; break;
+      default: logFile = article.ns + '.tsv';
+    }
+    const line = article.title + '\t' + article.id + '\n'
+    logIt(logFile, line);
+  }
+}
+
+function logEnUncategorized(article) {
+  const str = article.text;
+  if (
+    (hasString(str,'==English==')) &&
+    (!hasString(str,'{{en-')) &&
+    (!hasString(str,'{{catlangname|en')) &&
+    (!hasString(str,'{{cln|en')) &&
+    (!hasString(str,'{{head|en')) &&
+    (!hasString(str,'[[Category:English'))
+  ) {
+    const logFile = 'en - uncategorized.tsv';
+    const line = article.title + '\t' + article.id + '\n'
+    logIt(logFile, line);
+  }
+}
+
+function logTag(article) {
+  const str = article.text;
+  const line = article.title + '\t' + article.id + '\n'
+  if (hasString(str,'<!--')) logIt('all - tag - comment.tsv', line);
+  if (hasString(str,'<pre')) logIt('all - tag - pre.tsv', line);
+  if (hasString(str,'<code>')) logIt('all - tag - code.tsv', line);
+}
+
+function logTemplate(article) {
+  const str = article.text;
+  const line = article.title + '\t' + article.id + '\n'
+  if (hasString(str,'{{}}')) logIt('all - temp - empty.tsv', line);
+  if (hasString(str,'{{\\}}')) logIt('all - temp - empty 2.tsv', line);
+}
+
+function logMagic(article) {
+  const str = article.text;
+  const found = str.match(/__[A-Z]+__/g);
+  if (found) {
+    const line = article.title + '\t' + article.id + '\t' + found.join('\t') + '\n';
+    logIt('all - magic - switch.tsv', line);
+  }
+}
+
 
 
 // -------------------------------------------
