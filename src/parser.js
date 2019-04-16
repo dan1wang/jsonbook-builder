@@ -33,9 +33,6 @@ xParser.on('opentag', (node) => {
   if (xPath.length === 0) {
     if (node.name !== 'mediawiki') {
       throw new Error('XML file is not a Wiktionary file!');
-    } else {
-      console.log('This might take a while, so please take a break...');
-      console.log(new Date());
     }
   }
   xPath.push(node.name);
@@ -54,8 +51,6 @@ xParser.on('closetag', (node) => {
   xPath.pop(node.name);
   xPathString = xPath.join('/');
 });
-
-xParser.on('end', () => console.log(`Coffee break is over (${new Date()})`));
 
 xParser.onerror = (e) => console.log('Error: ' + e);
 

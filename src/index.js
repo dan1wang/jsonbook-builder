@@ -1,9 +1,9 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const getFileStream = require('./file').getFileStream;
+const parseXmlFile = require('./file').parseXmlFile;
 const parser = require('./parser').parser;
 const processorEn = require('./processor.en').processor;
 
 parser.processorFn = processorEn;
-getFileStream().pipe(parser);
+parseXmlFile('data', '', parser);

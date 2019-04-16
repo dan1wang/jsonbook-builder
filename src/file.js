@@ -5,32 +5,91 @@ const fs = require('fs');
 const path = require('path');
 const sys = require('os');
 const branch = require('git-branch');
-
-const DATA_DIR = 'data/';
+const bgWhite = require('chalk').bgWhite;
+const PassThrough = require('stream').PassThrough;
 
 /**
- * Get async data stream of an .xml file
+ * Get a pass-through stream processor for displaying file loading status
+ * @param {string} fPath File path
  * @param {string} fName File name
- * @return {object} Data stream
+ * @return {object} A PassThrough object
  */
-function getFileStream(fName) {
-  if (fName !== undefined) {
-    const fPath = DATA_DIR + fName;
-    if (fs.existsSync(fPath)) {
-      return fs.createReadStream(fPath);
-    } else {
-      throw new Error(`"data/${fName}" cannot be found.`);
+function getFileBar(fPath, fName) {
+  let startTime = 0;
+  const fTotalSize = fs.statSync(fPath + fName).size;
+  let fReadSize = 0;
+  let lastProgress = -1;
+  const fileBar = new PassThrough();
+  fileBar.on('data', (data) => {
+    fReadSize += data.length;
+    if (startTime ===0) startTime = (new Date()).valueOf();
+    const progress = Math.round(1000 * fReadSize / fTotalSize) / 1000;
+    if (progress !== lastProgress) {
+      lastProgress = progress;
+      // draw progress bar
+      const filled = Math.round(progress * 20, 0);
+      const bars = bgWhite(' '.repeat(filled)) + '.'.repeat(20 - filled);
+      const pct = (progress * 100).toFixed(1) + '%';
+      // process.stdout.clearLine();
+      process.stdout.cursorTo(0);
+      process.stdout.write(`[${bars}]: Reading "${fName}" (${pct})`);
     }
-  }
+  });
+  fileBar.on('end', () => {
+    const elapsedTime = ((new Date()).valueOf() - startTime) / (60 * 1000);
+    const h = Math.floor(elapsedTime / 60);
+    const m = Math.floor(elapsedTime) % 60;
+    let t;
+    switch (h) {
+      case 0: t = m + ' mins.'; break;
+      case 1: t = h + ' hr ' + m + ' mins.'; break;
+      default: t = h + ' hrs ' + m + ' mins.';
+    }
+    console.log('\nFinished in ' + t);
+  });
+  return fileBar;
+}
 
-  const files = fs.readdirSync(DATA_DIR);
-  for (let i = 0; i < files.length; i++) {
-    const fName = files[i];
-    if (fName.slice(fName.length-4).toLowerCase() === '.xml') {
-      return fs.createReadStream(DATA_DIR + fName);
+/**
+ * Get the file stream of a file
+ * @param {string} fPath File path
+ * @param {string} fName File name
+ * @return {object} A ReadStream object
+ */
+function getFileStream(fPath, fName) {
+  const fullFilePath = fPath + fName;
+  if (fs.existsSync(fPath)) {
+    const fStream = fs.createReadStream(fullFilePath);
+    return fStream;
+  } else {
+    throw new Error(`Cannot find "${fullFilePath}".`);
+  }
+}
+
+/**
+ * Process an XML file.
+ * If fName is empty, the first .xml file is processed
+ * @param {string} fPath File path
+ * @param {string} fName File name
+ * @param {object} parser XML parser
+ */
+function parseXmlFile(fPath, fName, parser) {
+  if (fPath[fPath.length-1] !== '/') fPath = fPath + '/';
+  if (!fName) {
+    const files = fs.readdirSync(fPath).sort();
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i];
+      if (f.slice(f.length-4).toLowerCase() === '.xml') {
+        fName = f;
+        break;
+      }
+    }
+    if (!fName) {
+      throw new Error(`Cannot find any XML file in "${fPath}".`);
     }
   }
-  throw new Error('Cannot find any .xml file in "data/" directory.');
+  const fFileBar = getFileBar(fPath, fName);
+  getFileStream(fPath, fName).pipe(fFileBar).pipe(parser);
 }
 
 /**
@@ -76,6 +135,6 @@ function getTempDir() {
 }
 
 exports.safeFileName = safeFileName;
-exports.getFileStream = getFileStream;
+exports.parseXmlFile = parseXmlFile;
 exports.mkDir = mkDir;
 exports.getTempDir = getTempDir;
